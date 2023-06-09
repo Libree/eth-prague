@@ -32,12 +32,8 @@ const BLOCK_EXPLORER_KEY = process.env.BLOCK_EXPLORER_KEY || '';
 
 const getCommonNetworkConfig = (networkName: eNetwork, networkId: number) => ({
   url: NETWORKS_RPC_URL[networkName] ?? '',
-  accounts: {
-    mnemonic: MNEMONIC,
-    path: MNEMONIC_PATH,
-    initialIndex: 0,
-    count: 20,
-  },
+  accounts:
+    process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : []
 });
 
 const mainnetFork = MAINNET_FORK
