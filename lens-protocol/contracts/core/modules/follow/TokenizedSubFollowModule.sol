@@ -9,7 +9,6 @@ import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import {SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import {TokenizedSub} from './TokenizedSub.sol';
 
-
 struct ProfileData {
     address currency;
     uint256 amount;
@@ -20,6 +19,13 @@ contract TokenizedSubFollowModule is IFollowModule, FollowValidatorFollowModuleB
     using SafeERC20 for IERC20;
 
     mapping(uint256 => ProfileData) internal _dataByProfile;
+
+    event Subscription(
+        uint256 indexed profileId,
+        address indexed follower,
+        uint256 indexed amount,
+        address tokenAddress
+    );
 
     constructor(address hub) ModuleBase(hub) {}
 
@@ -53,7 +59,9 @@ contract TokenizedSubFollowModule is IFollowModule, FollowValidatorFollowModuleB
         address recipient = _dataByProfile[profileId].recipient;
 
         IERC20(currency).safeTransferFrom(follower, recipient, amount);
+        TokenizedSub(recipient).paySubscription(amount);
 
+        emit Subscription(profileId, follower, amount, recipient);
     }
 
     function followModuleTransferHook(
