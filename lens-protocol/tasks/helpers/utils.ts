@@ -19,7 +19,7 @@ export function getAddrs(): any {
 }
 
 export async function waitForTx(tx: Promise<ContractTransaction>) {
-  await (await tx).wait();
+  return await (await tx).wait();
 }
 
 export async function deployContract(tx: any): Promise<Contract> {
@@ -74,8 +74,9 @@ export async function initEnv(hre: HardhatRuntimeEnvironment): Promise<SignerWit
   const governance = accounts[1];
   const treasury = accounts[2];
   const user = accounts[3];
+  const follower = accounts[3];
 
-  return [governance, treasury, user];
+  return [governance, treasury, user, follower];
 }
 
 async function delay(ms: number) {
