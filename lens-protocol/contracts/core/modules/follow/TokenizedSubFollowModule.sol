@@ -2,12 +2,13 @@
 
 pragma solidity 0.8.10;
 
-import {Errors} from '../../../libraries/Errors.sol';
 import {ModuleBase} from '../ModuleBase.sol';
 import {IFollowModule} from '../../../interfaces/IFollowModule.sol';
 import {FollowValidatorFollowModuleBase} from './FollowValidatorFollowModuleBase.sol';
 import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import {SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
+import {TokenizedSub} from './TokenizedSub.sol';
+
 
 struct ProfileData {
     address currency;
@@ -26,6 +27,17 @@ contract TokenizedSubFollowModule is IFollowModule, FollowValidatorFollowModuleB
         uint256 profileId,
         bytes calldata data
     ) external override onlyHub returns (bytes memory) {
+        (
+            uint256 initialSupply,
+            string memory name,
+            string memory symbol,
+            address minter,
+            uint256 amount,
+            address currency
+        ) = abi.decode(data, (uint256, string, string, address, uint256, address));
+
+        TokenizedSub tokenizedSub = new TokenizedSub(initialSupply, name, symbol, minter, currency);
+
         _dataByProfile[profileId].amount = amount;
         _dataByProfile[profileId].currency = currency;
         _dataByProfile[profileId].recipient = address(tokenizedSub);
@@ -39,6 +51,9 @@ contract TokenizedSubFollowModule is IFollowModule, FollowValidatorFollowModuleB
         uint256 amount = _dataByProfile[profileId].amount;
         address currency = _dataByProfile[profileId].currency;
         address recipient = _dataByProfile[profileId].recipient;
+
+        IERC20(currency).safeTransferFrom(follower, recipient, amount);
+
     }
 
     function followModuleTransferHook(
