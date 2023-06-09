@@ -1,0 +1,10 @@
+type SubscriptionPayment @entity(immutable: true) {
+  id: Bytes!
+  profileId: BigInt! # uint256
+  follower: Bytes! # address
+  amount: BigInt! # uint256
+  tokenAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
