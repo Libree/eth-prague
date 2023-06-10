@@ -10,7 +10,10 @@
    },
    "dependencies": {
       "@apollo/client": "^3.7.15",
+      "@emotion/react": "^11.11.1",
+      "@emotion/styled": "^11.11.0",
       "@lens-protocol/client": "^1.1.0",
+      "@mui/material": "^5.13.4",
       "@nextui-org/react": "^1.0.0-beta.10",
       "apexcharts": "^3.35.5",
       "next": "12.3.0",
