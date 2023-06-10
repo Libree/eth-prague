@@ -68,6 +68,13 @@ export const SidebarWrapper = () => {
                         icon={<ProductsIcon />}
                         href="/subscriptions"
                      />
+
+                     <SidebarItem
+                        isActive={router.pathname === '/market'}
+                        title="Market"
+                        icon={<ViewIcon />}
+                        href="/market"
+                     />
                   </SidebarMenu>
                </Sidebar.Body>
                <Sidebar.Footer>
