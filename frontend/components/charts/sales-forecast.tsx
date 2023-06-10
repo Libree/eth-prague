@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import {Box} from '../styles/box';
-import Chart, {Props} from 'react-apexcharts';
+import { Box } from '../styles/box';
+import Chart, { Props } from 'react-apexcharts';
 import { getSubscriptions } from '../../api/FetchGraphql';
+import { OpenAI } from "langchain/llms/openai";
+import { runCommand } from '../../api/chatgpt';
 
 export const SalesForecastChart = () => {
 
@@ -22,12 +24,23 @@ export const SalesForecastChart = () => {
             date: Date(sub.blockTimestamp)
          }
       })
-      const values = subscriptionsFormated.map((sub: any) => { return [parseInt(sub.blockTimestamp), sub.amount] })
-      console.log({values})
+
+      let cummulative = 0
+
+      const values = subscriptionsFormated.map((sub: any) => {
+         cummulative += Number(sub.amount)
+         return [parseInt(sub.blockTimestamp), cummulative]
+      }
+      )
+
+      const result = await runCommand(values)
+
+
       setState([
          {
             name: 'Sales',
-            data: values,
+            data: result
+            ,
          },
       ])
    }
@@ -47,7 +60,7 @@ export const SalesForecastChart = () => {
       }
    };
 
-   
+
    return (
       <>
          <Box
