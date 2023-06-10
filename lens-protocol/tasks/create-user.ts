@@ -20,7 +20,7 @@ task('create-user', 'deploys the entire Lens Protocol').setAction(async ({ }, hr
 
   const inputStruct = {
     to: user.address,
-    handle: 'teretete',
+    handle: 'tereth2',
     imageURI:
       'https://ipfs.fleek.co/ipfs/ghostplantghostplantghostplantghostplantghostplantghostplan',
     followModule: ZERO_ADDRESS,

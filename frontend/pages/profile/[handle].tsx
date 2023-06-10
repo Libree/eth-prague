@@ -16,7 +16,9 @@ export default function Profile() {
 
     const getData = async () => {
         if (handle) {
+            console.log('handle',handle)
             const result = await getProfileByHandle(handle as string);
+            console.log('profile:')
             console.log(result)
             setProfile(result);
             setLoading(false);
