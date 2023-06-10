@@ -121,7 +121,7 @@ const UserProvider = ({ children }: UserProviderProps) => {
         const lensHub = LensHub__factory.connect(LENS_HUB_ADDRESS, signer);
         const data = defaultAbiCoder.encode(
             ['uint256', 'string', 'string', 'address', 'uint256', 'address'],
-            ['10000000', 'Token', inputData.name, address, '1000', PAYMENT_TOKEN]
+            ['10000000', 'Token', inputData.name, address, '10000000', PAYMENT_TOKEN]
         );
 
         await waitForTx(await (lensHub.connect(signer).setFollowModule(PROFILE_ID, SUBSCRIPTION_MODULE, data)));
