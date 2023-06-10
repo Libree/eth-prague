@@ -14,6 +14,7 @@ export const getSubscriptions = async() => {
       follower
       amount
       tokenAddress
+      blockTimestamp
     }
   }
 `
