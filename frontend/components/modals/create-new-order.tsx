@@ -1,5 +1,7 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useContext } from "react";
 import { Button, Input, Modal, Text } from "@nextui-org/react";
+import { User } from '../../context';
+
 
 interface ModalProps {
     openModal: boolean;
@@ -7,10 +9,15 @@ interface ModalProps {
 }
 
 export function NewOrderModal({ openModal, closeHandler }: ModalProps) {
+
+    const { addOrder } = useContext(User);
+
+
     const [input, setInput] = useState({
-        token: "",
+        principal: "",
         amount: "",
-        price: "",
+        collateral: "",
+        duration: ""
     });
 
     const handleInputChange = (e: ChangeEvent<any>) => {
@@ -18,14 +25,28 @@ export function NewOrderModal({ openModal, closeHandler }: ModalProps) {
     };
 
     const submitHandle = async () => {
-        if (!input.token || !input.amount || !input.price) {
-            return;
-        }
         setInput({
-            token: "",
-            amount: "",
-            price: "",
+            principal: input.principal,
+            amount: input.amount,
+            collateral: input.collateral,
+            duration: input.duration
         });
+
+        addOrder({
+            principal: input.principal,
+            amount: input.amount,
+            collateral: input.collateral,
+            duration: input.duration
+        })
+
+        setInput({
+            principal: "",
+            amount: "",
+            collateral: "",
+            duration: ""
+        });
+
+
         closeHandler();
     };
 
@@ -51,9 +72,9 @@ export function NewOrderModal({ openModal, closeHandler }: ModalProps) {
                         fullWidth
                         color="primary"
                         size="lg"
-                        placeholder="Token"
-                        name="token"
-                        value={input.token}
+                        placeholder="Asset to borrow"
+                        name="principal"
+                        value={input.principal}
                         onChange={handleInputChange}
                     />
                     <Input
@@ -75,9 +96,22 @@ export function NewOrderModal({ openModal, closeHandler }: ModalProps) {
                         fullWidth
                         color="primary"
                         size="lg"
-                        placeholder="Price"
-                        name="price"
-                        value={input.price}
+                        placeholder="Collateral"
+                        name="collateral"
+                        value={input.collateral}
+                        onChange={handleInputChange}
+                    />
+
+                    <Input
+                        required
+                        clearable
+                        bordered
+                        fullWidth
+                        color="primary"
+                        size="lg"
+                        placeholder="Loan Duration (days)"
+                        name="duration"
+                        value={input.duration}
                         onChange={handleInputChange}
                     />
                 </Modal.Body>

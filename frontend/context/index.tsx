@@ -18,6 +18,8 @@ interface IUserContext {
     handleSelectTestUser: (id?: string, handle?: string) => void;
     handleFollow: (id: string) => void;
     getTokenMetadata: (id: string) => void;
+    addOrder: (orders: any) => void,
+    orders: []
 }
 
 export const User = createContext<IUserContext>({
@@ -38,4 +40,6 @@ export const User = createContext<IUserContext>({
     createSubscription: () => {},
     handleFollow: () => {},
     getTokenMetadata: () => {},
+    addOrder: () => {},
+    orders: []
 });

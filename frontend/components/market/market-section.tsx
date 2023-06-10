@@ -76,7 +76,7 @@ export const MarketSection = () => {
                 </Flex>
                 <Flex css={{ gap: '$6' }} align={'center'}>
                     {isLogged ? (
-                        <Button auto color={'gradient'} onPress={() => setOpenModal(true)}>New order</Button>
+                        <Button auto color={'gradient'} onPress={() => setOpenModal(true)}>Request a Loan on PWN</Button>
                     ) : (
                         <Text h5 color={'gray'}>Please log in</Text>
                     )}

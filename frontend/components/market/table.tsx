@@ -1,15 +1,25 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Table, Text } from '@nextui-org/react';
 import { Box } from '../styles/box';
 import { columns } from './data';
 import { RenderCell } from './render-cell';
+import { User } from '../../context';
 
 interface TableProps {
    profiles: any[];
 }
 
 export const MarketTableWrapper = ({ profiles }: TableProps) => {
-   const users = profiles;
+
+   const { orders } = useContext(User);
+
+   const [users, setUsers] = useState([])
+
+   useEffect(() => {
+      setUsers(orders)
+   }, [orders])
+
+
    return (
       <Box
          css={{
@@ -48,16 +58,24 @@ export const MarketTableWrapper = ({ profiles }: TableProps) => {
                      </Table.Column>
                   )}
                </Table.Header>
-               <Table.Body items={users}>
-                  {(profile) => (
+               <Table.Body>
+                  {orders.map(order => (
                      <Table.Row>
-                        {(columnKey) => (
-                           <Table.Cell>
-                              <RenderCell user={profile} columnKey={columnKey} />
-                           </Table.Cell>
-                        )}
+                        <Table.Cell>
+                           {order.principal}
+                        </Table.Cell>
+                        <Table.Cell>
+                        {order.amount}
+                        </Table.Cell>
+                        <Table.Cell>
+                        {order.collateral}
+                        </Table.Cell>
+                        <Table.Cell>
+                        {order.duration}
+                        </Table.Cell>
                      </Table.Row>
-                  )}
+                  ))}
+
                </Table.Body>
                <Table.Pagination
                   shadow

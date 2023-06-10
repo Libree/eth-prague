@@ -8,27 +8,24 @@ interface Props {
 
 export const RenderCell = ({ user, columnKey }: Props) => {
    // @ts-ignore
-   const cellValue = user[columnKey];
    switch (columnKey) {
-      case 'token':
+      case 'principal':
          return (
-            <User squared src={user.picture?.original?.url} name={user.name} css={{ p: 0 }}>
-               {user.token}
-            </User>
+            <>3</>
          );
       case 'amount':
          return (
-            <Text size={14} css={{ tt: 'capitalize' }}>
-               {cellValue}
-            </Text>
+            <>{user.amount}</>
          );
-      case 'price':
+      case 'collateral':
          return (
-            <Text size={14} css={{ tt: 'capitalize' }}>
-               {cellValue}
-            </Text>
+            <>{user.collateral}</>
+         );
+      case 'duration':
+         return (
+            <>{user.duration}</>
          );
       default:
-         return cellValue;
+         return <></>;
    }
 };

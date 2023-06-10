@@ -37,15 +37,7 @@ export default function Profile() {
     return (
         <>
             <Container css={{ padding: '0' }}>
-                <Image
-                    src={!loading ? profile.coverPicture?.original.url : ''}
-                    autoResize
-                    css={{ minHeight: '200px' }}
-                    containerCss={{
-                        bg: '$blue100',
-                        color: '$gray700',
-                    }}
-                />
+
             </Container>
             <Container
                 css={{

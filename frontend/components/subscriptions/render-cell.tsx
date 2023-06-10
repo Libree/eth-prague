@@ -29,7 +29,12 @@ export const RenderCell = ({ user, columnKey }: Props) => {
          );
       case 'address':
          return (
-            <>{user.tokenAddress}</>
+            <a 
+            href={`https://mumbai.polygonscan.com/address/${user.tokenAddress}`}
+            target='_blank'
+            >
+               {user.tokenAddress}
+            </a>
          );
       default:
          return cellValue;
