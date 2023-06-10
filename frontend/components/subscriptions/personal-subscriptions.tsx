@@ -12,6 +12,7 @@ import {SubscriptionModal} from '../modals/create-subscription';
 import { LoginToContinueModal } from '../modals/login-to-continue';
 import { User } from '../../context';
 
+
 export const PersonalSubscriptions = () => {
     const { isLogged, setOpenAlertModal } = useContext(User);
     const [openModal, setOpenModal] = useState(false);

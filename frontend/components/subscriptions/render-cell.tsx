@@ -1,5 +1,5 @@
 import React from 'react';
-import {User as UserCell} from '@nextui-org/react';
+import { User as UserCell } from '@nextui-org/react';
 import { formatAddress } from '../../utils';
 
 interface Props {
@@ -7,31 +7,29 @@ interface Props {
    columnKey: string | React.Key;
 }
 
-export const RenderCell = ({user, columnKey}: Props) => {
+export const RenderCell = ({ user, columnKey }: Props) => {
    // @ts-ignore
    const cellValue = user[columnKey];
    switch (columnKey) {
       case 'name':
          return (
-            <UserCell squared src={user.picture?.original?.url} name={user.name || formatAddress(user.ownedBy)} css={{p: 0}}>
-               {user.handle}
-            </UserCell>
+            <>{user.name}</>
          );
       case 'symbol':
          return (
-            <></>
+            <>{user.symbol}</>
          );
       case 'price':
          return (
-            <></>
+            <>{user.amount}</>
          );
       case 'paymentToken':
          return (
-            <></>
+            <>USDC</>
          );
       case 'address':
          return (
-            <></>
+            <>{user.tokenAddress}</>
          );
       default:
          return cellValue;

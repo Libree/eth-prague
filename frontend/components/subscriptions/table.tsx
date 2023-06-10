@@ -4,13 +4,28 @@ import { Box } from '../styles/box';
 import { columns } from './data';
 import { RenderCell } from './render-cell';
 import { User } from '../../context';
+import { getSubscriptions } from '.././../api/FetchGraphql';
+
 
 export const SubsTableWrapper = () => {
-   const { reload } = useContext(User);
-   const [users, setUsers] = useState([]);
+   const { reload, getTokenMetadata } = useContext(User);
+   const [subscriptions, setSubscriptions] = useState([]);
 
    const getData = async () => {
-      setUsers([]);
+      const subscriptions = await getSubscriptions()
+      const subscriptionsWithToken = await Promise.all(
+         subscriptions.data.subscriptionPayments.map(async(token) => {
+            const metadata = await getTokenMetadata(token.tokenAddress)
+            console.log(metadata)
+            return {
+               ...token,
+               ...metadata
+            }
+         })
+      )
+
+      console.log(subscriptionsWithToken)
+      setSubscriptions(subscriptionsWithToken);
    };
 
    useEffect(() => {
@@ -25,7 +40,7 @@ export const SubsTableWrapper = () => {
             },
          }}
       >
-         {!users.length ? (
+         {!subscriptions.length ? (
             <Box css={{ margin: '5rem 0' }}>
                <Text b color={"gray"} css={{ padding: '0.1rem', marginTop: '3rem' }}>
                   No subscriptions found. Please add a subscription to see it here.
@@ -54,12 +69,12 @@ export const SubsTableWrapper = () => {
                      </Table.Column>
                   )}
                </Table.Header>
-               <Table.Body items={users}>
-                  {(profile) => (
+               <Table.Body items={subscriptions}>
+                  {(subscriptions) => (
                      <Table.Row>
                         {(columnKey) => (
                            <Table.Cell>
-                              <RenderCell user={profile} columnKey={columnKey} />
+                              <RenderCell user={subscriptions} columnKey={columnKey} />
                            </Table.Cell>
                         )}
                      </Table.Row>

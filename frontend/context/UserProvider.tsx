@@ -139,14 +139,24 @@ const UserProvider = ({ children }: UserProviderProps) => {
 
         const usdc = await ERC20__factory.connect(USDC_ADDRESS, signer)
         await waitForTx(await usdc.connect(signer).approve(APPROVE_CONTRACT, '10000000000'))
-      
+
         const data = defaultAbiCoder.encode(
-          ['uint256'],
-          ['1000000']
+            ['uint256'],
+            ['1000000']
         );
-      
+
         await waitForTx(await lensHub.connect(signer).follow([PROFILE_ID_FOLLOW], [data]))
     };
+
+    const getTokenMetadata = async (address: string) => {
+
+        const token = await ERC20__factory.connect(address, signer)
+        const name = await token.name()
+        const symbol = await token.symbol()
+
+        return { name, symbol }
+    };
+
 
 
     return (
@@ -167,7 +177,8 @@ const UserProvider = ({ children }: UserProviderProps) => {
                 selectedTestUser,
                 handleSelectTestUser,
                 createSubscription,
-                handleFollow
+                handleFollow,
+                getTokenMetadata
             }}
         >
             {children}
