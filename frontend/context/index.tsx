@@ -16,6 +16,7 @@ interface IUserContext {
     createSubscription: () => void;
     selectedTestUser: { id: string; handle: string };
     handleSelectTestUser: (id?: string, handle?: string) => void;
+    handleFollow: (id: string) => void;
 }
 
 export const User = createContext<IUserContext>({
@@ -34,4 +35,5 @@ export const User = createContext<IUserContext>({
     selectedTestUser: { id: '', handle: '' },
     handleSelectTestUser: () => {},
     createSubscription: () => {},
+    handleFollow: () => {},
 });

@@ -13,6 +13,8 @@ import {
 import { defaultAbiCoder } from 'ethers/lib/utils';
 
 import { LensHub__factory } from '../lib/typechain/LensHub__factory'
+import { ERC20__factory } from '../lib/typechain/ERC20__factory'
+
 
 declare global {
     interface Window {
@@ -27,8 +29,11 @@ interface UserProviderProps {
 const UserProvider = ({ children }: UserProviderProps) => {
     const LENS_HUB_ADDRESS = '0x7582177F9E536aB0b6c721e11f383C326F2Ad1D5'
     const SUBSCRIPTION_MODULE = '0x34AF6976a383B470831fD436036acA2f7AA811d3';
+    const APPROVE_CONTRACT = '0x82b9702867f70d2e3445385828194b5843f413d4'
     const PAYMENT_TOKEN = '0xe9DcE89B076BA6107Bb64EF30678efec11939234'
+    const USDC_ADDRESS = '0xe9DcE89B076BA6107Bb64EF30678efec11939234'
     const PROFILE_ID = 635
+    const PROFILE_ID_FOLLOW = 637
     const [openAlertModal, setOpenAlertModal] = useState<boolean>(false);
     const [isLogged, setIsLogged] = useState(false);
     const [address, setAddress] = useState<string>('');
@@ -128,6 +133,22 @@ const UserProvider = ({ children }: UserProviderProps) => {
     };
 
 
+    const handleFollow = async (id: string) => {
+
+        const lensHub = LensHub__factory.connect(LENS_HUB_ADDRESS, signer);
+
+        const usdc = await ERC20__factory.connect(USDC_ADDRESS, signer)
+        await waitForTx(await usdc.connect(signer).approve(APPROVE_CONTRACT, '10000000000'))
+      
+        const data = defaultAbiCoder.encode(
+          ['uint256'],
+          ['1000000']
+        );
+      
+        await waitForTx(await lensHub.connect(signer).follow([PROFILE_ID_FOLLOW], [data]))
+    };
+
+
     return (
         <User.Provider
             value={{
@@ -145,7 +166,8 @@ const UserProvider = ({ children }: UserProviderProps) => {
                 explorePublications,
                 selectedTestUser,
                 handleSelectTestUser,
-                createSubscription
+                createSubscription,
+                handleFollow
             }}
         >
             {children}
