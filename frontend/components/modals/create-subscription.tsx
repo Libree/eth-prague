@@ -21,7 +21,9 @@ export function SubscriptionModal({ openModal, closeHandler }: ModalProps) {
     };
 
     const submitHandle = async () => {
-        if (!input.name || !input.symbol || !input.price || !input.paymentToken) {
+        console.log(input)
+
+        if (!input.name || !input.symbol || !input.price) {
             return;
         }
         await createSubscription(input);

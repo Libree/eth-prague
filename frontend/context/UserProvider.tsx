@@ -10,6 +10,10 @@ import {
     PublicationSortCriteria,
 } from '@lens-protocol/client';
 
+import { defaultAbiCoder } from 'ethers/lib/utils';
+
+import { LensHub__factory } from '../lib/typechain/LensHub__factory'
+
 declare global {
     interface Window {
         ethereum: any;
@@ -21,6 +25,10 @@ interface UserProviderProps {
 }
 
 const UserProvider = ({ children }: UserProviderProps) => {
+    const LENS_HUB_ADDRESS = '0x7582177F9E536aB0b6c721e11f383C326F2Ad1D5'
+    const SUBSCRIPTION_MODULE = '0x34AF6976a383B470831fD436036acA2f7AA811d3';
+    const PAYMENT_TOKEN = '0xe9DcE89B076BA6107Bb64EF30678efec11939234'
+    const PROFILE_ID = 635
     const [openAlertModal, setOpenAlertModal] = useState<boolean>(false);
     const [isLogged, setIsLogged] = useState(false);
     const [address, setAddress] = useState<string>('');
@@ -28,6 +36,7 @@ const UserProvider = ({ children }: UserProviderProps) => {
     const [lensClient, setLensClient] = useState<any>(undefined);
     const [selectedTestUser, setSelectedTestUser] = useState({ id: '', handle: '' });
     const [reload, setReload] = useState<boolean>(false);
+    const [signer, setSigner] = useState<any>(null);
 
 
     const loginLens = async () => {
@@ -46,6 +55,7 @@ const UserProvider = ({ children }: UserProviderProps) => {
 
         setProvider(provider);
         setAddress(address);
+        setSigner(signer);
         const isLoggedResult = await lensClient.authentication.isAuthenticated();
         setIsLogged(isLoggedResult);
         setOpenAlertModal(false);
@@ -94,11 +104,27 @@ const UserProvider = ({ children }: UserProviderProps) => {
     };
 
     const getProfileByHandle = async (handle: string) => {
-        console.log({handle})
+        console.log({ handle })
         const profileDetails = await lensClient.profile.fetch({
             handle,
         })
         return profileDetails;
+    };
+
+    const waitForTx = async (tx: any) => {
+        const receipt = await provider.waitForTransaction(tx.hash);
+        return receipt;
+    };
+
+    const createSubscription = async (inputData: any) => {
+
+        const lensHub = LensHub__factory.connect(LENS_HUB_ADDRESS, signer);
+        const data = defaultAbiCoder.encode(
+            ['uint256', 'string', 'string', 'address', 'uint256', 'address'],
+            ['10000000', 'Token', inputData.name, address, '1000', PAYMENT_TOKEN]
+        );
+
+        await waitForTx(await (lensHub.connect(signer).setFollowModule(PROFILE_ID, SUBSCRIPTION_MODULE, data)));
     };
 
 
@@ -119,6 +145,7 @@ const UserProvider = ({ children }: UserProviderProps) => {
                 explorePublications,
                 selectedTestUser,
                 handleSelectTestUser,
+                createSubscription
             }}
         >
             {children}
