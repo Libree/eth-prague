@@ -1,5 +1,6 @@
 export const columns = [
-   {name: 'TOKEN', uid: 'token'},
-   {name: 'SUPPLY', uid: 'amount'},
-   {name: 'PRICE', uid: 'price'},
+   {name: 'PRINCIPAL', uid: 'principal'},
+   {name: 'AMOUNT', uid: 'amount'},
+   {name: 'COLLATERAL', uid: 'price'},
+   {name: 'DURATION', uid: 'duration'}
 ];

@@ -28,7 +28,7 @@ interface UserProviderProps {
 
 const UserProvider = ({ children }: UserProviderProps) => {
     const LENS_HUB_ADDRESS = '0x7582177F9E536aB0b6c721e11f383C326F2Ad1D5'
-    const SUBSCRIPTION_MODULE = '0x34AF6976a383B470831fD436036acA2f7AA811d3';
+    const SUBSCRIPTION_MODULE = '0x358800E79E13EDC3820aB3a98321c7a292f92Ea1';
     const APPROVE_CONTRACT = '0x82b9702867f70d2e3445385828194b5843f413d4'
     const PAYMENT_TOKEN = '0xe9DcE89B076BA6107Bb64EF30678efec11939234'
     const USDC_ADDRESS = '0xe9DcE89B076BA6107Bb64EF30678efec11939234'
@@ -42,6 +42,7 @@ const UserProvider = ({ children }: UserProviderProps) => {
     const [selectedTestUser, setSelectedTestUser] = useState({ id: '', handle: '' });
     const [reload, setReload] = useState<boolean>(false);
     const [signer, setSigner] = useState<any>(null);
+    const [orders, setOrders] = useState<any>([]);
 
 
     const loginLens = async () => {
@@ -157,6 +158,14 @@ const UserProvider = ({ children }: UserProviderProps) => {
         return { name, symbol }
     };
 
+    const addOrder = async (order: any) => {
+        setOrders([
+            ...orders,
+            order
+        ])
+
+    }
+
 
 
     return (
@@ -178,7 +187,9 @@ const UserProvider = ({ children }: UserProviderProps) => {
                 handleSelectTestUser,
                 createSubscription,
                 handleFollow,
-                getTokenMetadata
+                getTokenMetadata,
+                addOrder,
+                orders
             }}
         >
             {children}

@@ -23,8 +23,13 @@ export const SalesChart = () => {
             date: Date(sub.blockTimestamp)
          }
       })
-      const values = subscriptionsFormated.map((sub: any) => { return [parseInt(sub.blockTimestamp), sub.amount] })
-      console.log({values})
+      let cummulative = 0
+
+      const values = subscriptionsFormated.map((sub: any) => { 
+         cummulative += Number(sub.amount)
+         return [parseInt(sub.blockTimestamp), cummulative] }
+         )
+
       setState([
          {
             name: 'Sales',

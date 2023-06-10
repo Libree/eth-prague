@@ -14,9 +14,8 @@ export const SubsTableWrapper = () => {
    const getData = async () => {
       const subscriptions = await getSubscriptions()
       const subscriptionsWithToken = await Promise.all(
-         subscriptions.data.subscriptionPayments.map(async(token) => {
+         subscriptions.data.subscriptionPayments.map(async (token) => {
             const metadata = await getTokenMetadata(token.tokenAddress)
-            console.log(metadata)
             return {
                ...token,
                ...metadata
@@ -24,9 +23,31 @@ export const SubsTableWrapper = () => {
          })
       )
 
-      console.log(subscriptionsWithToken)
-      setSubscriptions(subscriptionsWithToken);
-   };
+      const filtered = subscriptionsWithToken.filter((value, index, self) =>
+         index === self.findIndex((t) => (
+            t.tokenAddress === value.tokenAddress
+         ))
+      )
+
+      console.log(filtered)
+      if (false) {
+         setSubscriptions(filtered);
+      } else {
+         setSubscriptions([
+            ...filtered,
+            {
+               "id": "0x06bd5201bca8a9ad8e3bf84257de21af3fccdc54d465b8d1c6a5f4cd56e526cf1100004",
+                "name": 'Designer Course',
+               "symbol": 'DECOUR',
+               "amount": "10",
+               "paymentToken": 'USDC',
+               "tokenAddress": '0x1A10cF933ef0284747bEF0d3510ce4Ccc86dEB54'
+            }
+         ]);
+
+      }
+
+   }
 
    useEffect(() => {
       getData();
