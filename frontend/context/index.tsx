@@ -13,6 +13,8 @@ interface IUserContext {
     searchProfiles: (search: string) => any;
     getProfileFeed: (profileId: string) => any;
     explorePublications: () => void;
+    selectedTestUser: { id: string; handle: string };
+    handleSelectTestUser: (id?: string, handle?: string) => void;
 }
 
 export const User = createContext<IUserContext>({
@@ -28,4 +30,6 @@ export const User = createContext<IUserContext>({
     searchProfiles: () => {},
     getProfileFeed: () => {},
     explorePublications: () => {},
+    selectedTestUser: { id: '', handle: '' },
+    handleSelectTestUser: () => {},
 });

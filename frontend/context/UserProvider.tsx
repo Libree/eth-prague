@@ -22,6 +22,8 @@ const UserProvider = ({ children }: UserProviderProps) => {
     const [address, setAddress] = useState<string>('');
     const [provider, setProvider] = useState<any>(undefined);
     const [lensClient, setLensClient] = useState<any>(undefined);
+    const [selectedTestUser, setSelectedTestUser] = useState({ id: '', handle: '' });
+
 
     const loginLens = async () => {
         const lensClient = new LensClient({ environment: development });
@@ -63,6 +65,14 @@ const UserProvider = ({ children }: UserProviderProps) => {
         return result;
     };
 
+    const handleSelectTestUser = (id?: string, handle?: string) => {
+        if (selectedTestUser.id === id) {
+            setSelectedTestUser({ id: '', handle: '' });
+        } else {
+            setSelectedTestUser({ id, handle });
+        }
+    };
+
 
     return (
         <User.Provider
@@ -79,6 +89,8 @@ const UserProvider = ({ children }: UserProviderProps) => {
                 searchProfiles,
                 getProfileFeed: () => { },
                 explorePublications,
+                selectedTestUser,
+                handleSelectTestUser,
             }}
         >
             {children}
