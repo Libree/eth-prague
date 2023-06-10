@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { User } from '.';
+import { ethers } from 'ethers';
+
 import {
+    CreateProfileRequest,
     LensClient,
     development,
+    isRelayerResult,
     PublicationSortCriteria,
 } from '@lens-protocol/client';
 
@@ -23,12 +27,15 @@ const UserProvider = ({ children }: UserProviderProps) => {
     const [provider, setProvider] = useState<any>(undefined);
     const [lensClient, setLensClient] = useState<any>(undefined);
     const [selectedTestUser, setSelectedTestUser] = useState({ id: '', handle: '' });
+    const [reload, setReload] = useState<boolean>(false);
 
 
     const loginLens = async () => {
         const lensClient = new LensClient({ environment: development });
         setLensClient(lensClient);
 
+        const provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
+        await provider.send('eth_requestAccounts', []);
         const signer = provider.getSigner();
         const address = await signer.getAddress();
 
@@ -73,6 +80,27 @@ const UserProvider = ({ children }: UserProviderProps) => {
         }
     };
 
+    const createTestProfile = async (value: CreateProfileRequest) => {
+        const profileResult = await lensClient.profile.create(value);
+        const profileResultValue = profileResult.unwrap();
+
+        if (!isRelayerResult(profileResultValue)) {
+            console.log('Something went wrong', profileResultValue);
+            return;
+        }
+
+        console.log('Tx was successfuly broadcasted with txId', profileResultValue.txId);
+        setReload(!reload);
+    };
+
+    const getProfileByHandle = async (handle: string) => {
+        console.log({handle})
+        const profileDetails = await lensClient.profile.fetch({
+            handle,
+        })
+        return profileDetails;
+    };
+
 
     return (
         <User.Provider
@@ -84,7 +112,7 @@ const UserProvider = ({ children }: UserProviderProps) => {
                 address,
                 loginLens,
                 checkIsLogged,
-                getProfileByHandle: () => { },
+                getProfileByHandle,
                 getRecommendedProfiles: () => { },
                 searchProfiles,
                 getProfileFeed: () => { },

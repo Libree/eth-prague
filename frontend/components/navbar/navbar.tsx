@@ -1,20 +1,29 @@
-import {Input, Link, Navbar, Text} from '@nextui-org/react';
-import React from 'react';
-import {FeedbackIcon} from '../icons/navbar/feedback-icon';
-import {GithubIcon} from '../icons/navbar/github-icon';
+import {Button, Input, Link, Navbar} from '@nextui-org/react';
+import React, { useContext, useState, useEffect } from 'react';
 import {SupportIcon} from '../icons/navbar/support-icon';
 import {SearchIcon} from '../icons/searchicon';
 import {Box} from '../styles/box';
-import {Flex} from '../styles/flex';
 import {BurguerButton} from './burguer-button';
 import {NotificationsDropdown} from './notifications-dropdown';
 import {UserDropdown} from './user-dropdown';
+import { User } from '../../context';
+import {TestUserModal} from '../modals/create-test-user';
+import { useRouter } from 'next/router';
+import SelectedHandle from '../selected-user/selected';
 
 interface Props {
    children: React.ReactNode;
 }
 
 export const NavbarWrapper = ({children}: Props) => {
+   const router = useRouter();
+   const { isLogged, loginLens, checkIsLogged } = useContext(User);
+   const [openModal, setOpenModal] = useState(false);
+
+   useEffect(() => {
+      isLogged && checkIsLogged();
+   }, [router.pathname])
+
    const collapseItems = [
       'Profile',
       'Dashboard',
@@ -94,14 +103,39 @@ export const NavbarWrapper = ({children}: Props) => {
                />
             </Navbar.Content>
             <Navbar.Content>
-               <Navbar.Content hideIn={'md'}>
-               </Navbar.Content>
-               <Navbar.Content hideIn={'md'}>
-                  <SupportIcon />
-               </Navbar.Content>
-               <Navbar.Content>
-                  <UserDropdown />
-               </Navbar.Content>
+               <Box css={{ width: '2rem', '@md': { width: '5rem' }, '@lg' : { width: '10rem' } }} />
+
+               {isLogged ? (
+                  <>
+                     <Navbar.Content hideIn={'md'}>
+                        <SelectedHandle />
+                     </Navbar.Content>
+
+                     <Navbar.Content>
+                        <NotificationsDropdown />
+                     </Navbar.Content>
+
+                     <Navbar.Content hideIn={'md'}>
+                        <SupportIcon />
+                     </Navbar.Content>
+
+                     <Navbar.Content>
+                        <UserDropdown />
+                     </Navbar.Content>
+                  </>
+               ) : (
+                  <>
+                     <Navbar.Content>
+                        <Button
+                           color="secondary"
+                           css={{ minWidth: '100%' }}
+                           onPress={loginLens}
+                        >
+                           Login
+                        </Button>
+                     </Navbar.Content>
+                  </>
+               )}
             </Navbar.Content>
 
             <Navbar.Collapse>
@@ -129,6 +163,10 @@ export const NavbarWrapper = ({children}: Props) => {
             </Navbar.Collapse>
          </Navbar>
          {children}
+         <TestUserModal
+            openModal={openModal}
+            closeHandler={() => setOpenModal(false)}
+         />
       </Box>
    );
 };

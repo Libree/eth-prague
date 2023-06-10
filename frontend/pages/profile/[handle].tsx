@@ -17,6 +17,7 @@ export default function Profile() {
     const getData = async () => {
         if (handle) {
             const result = await getProfileByHandle(handle as string);
+            console.log(result)
             setProfile(result);
             setLoading(false);
         }
@@ -72,7 +73,7 @@ export default function Profile() {
                             {!loading && formatAddress(profile.ownedBy)}
                         </Text>
                     </Box>
-                    {selectedTestUser.id ? (
+                    {
                         <Button auto onPress={followProfile}>
                             {loading ? (
                                 <Loading type="spinner" size="sm" color="secondary" css={{ minWidth: '2rem' }} />
@@ -80,20 +81,7 @@ export default function Profile() {
                                 profile.isFollowedByMe ? 'Following' : 'Follow'
                             )}
                         </Button>
-                    ) : (
-                        <Tooltip
-                            content="You must connect a test user to follow profiles."
-                            color="success"
-                        >
-                            <Button auto disabled onPress={followProfile}>
-                                {loading ? (
-                                    <Loading type="spinner" size="sm" color="secondary" css={{ minWidth: '2rem' }} />
-                                ) : (
-                                    profile.isFollowedByMe ? 'Following' : 'Follow'
-                                )}
-                            </Button>
-                        </Tooltip>
-                    )}
+                    }
                 </Box>
                 <Divider css={{ margin: '0.5rem 0' }} />
                 <Box css={{ margin: '1rem 0' }}>
