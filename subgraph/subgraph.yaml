@@ -9,7 +9,7 @@ dataSources:
     name: TokenizedSub
     network: mumbai
     source:
-      address: "0x34AF6976a383B470831fD436036acA2f7AA811d3"
+      address: "0x358800E79E13EDC3820aB3a98321c7a292f92Ea1"
       abi: TokenizedSub
       startBlock: 36641150
     mapping:
